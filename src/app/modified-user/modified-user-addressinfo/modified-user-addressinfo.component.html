@@ -2,8 +2,8 @@
 <span>{{address.AddressInfo}}</span>
 <!-- <button (click)="onEditAddress(address)">Edit</button> -->
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" [attr.data-target]="'#modal' + address.AddressId">
-  Launch demo modal
+<button type="button" data-toggle="modal" [attr.data-target]="'#modal' + address.AddressId">
+  Edit
 </button>
 
 <!-- Modal -->
@@ -18,7 +18,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>Address Info: <input type="text" value=""/></p>
+        <p>Address Info: <input type="text" [(ngModel)]="addressEdit"/></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="onSaveChange(addressEdit)" data-dismiss="modal">Save changes</button>

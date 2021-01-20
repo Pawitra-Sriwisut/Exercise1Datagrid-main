@@ -12,25 +12,22 @@ export class ModifiedUserAddressinfoComponent implements OnInit {
   @Input() address: CustomerAddress;
   @Input() addressLists: any[];
   addressEdit: string;
-  tmp: CustomerAddress;
+  index: number;
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.tmp = this.address;
     this.addressEdit = this.address.AddressInfo;
   }
 
-  onEditAddress(address: CustomerAddress){
-    console.log(address);
-  }
-
   onDeleteAddress(address){
-
+    this.index = this.addressLists.indexOf(address);
+    if (this.index > -1) {
+      this.addressLists.splice(this.index, 1);
+    }
   }
 
   onSaveChange(addressChange){
-    //console.log(this.addressLists.find(b => b.AddressId === addressChange.AddressId));
     this.address.AddressInfo = addressChange;
   }
 
