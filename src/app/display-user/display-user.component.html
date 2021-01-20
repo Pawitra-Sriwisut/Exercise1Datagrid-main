@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <button class="buttonNewUser" (click)="onEdit(0)">New User</button>
+            <br /><br /> 
+            <dx-data-grid id="gridContainer" [dataSource]="dataSource" [remoteOperations]="true" showBorders="true"
+                height="600">
+                <dxi-column dataField="CustomerId" caption="ID">
+                </dxi-column>
+                <dxi-column dataField="FirstName" caption="ชื่อ">
+                </dxi-column>
+                <dxi-column dataField="LastName" caption="นามสกุล">
+                </dxi-column>
+                <dxi-column dataField="Action" caption="Action" cellTemplate="ButtonTemplate">
+                </dxi-column>
+
+                <div *dxTemplate="let cell of 'ButtonTemplate'">
+                    <button (click)="onEdit(cell.data)">Edit</button>
+                </div>
+                <dxo-paging [pageSize]="12"></dxo-paging>
+                <dxo-pager
+                    [showPageSizeSelector]="true"
+                    [allowedPageSizes]="[8, 12, 20]"
+                ></dxo-pager>
+            </dx-data-grid>
+        </div>
+    </div>
+</div>

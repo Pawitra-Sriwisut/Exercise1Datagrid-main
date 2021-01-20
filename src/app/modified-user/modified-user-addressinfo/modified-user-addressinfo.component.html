@@ -1,0 +1,31 @@
+<label>Address Info:</label>
+<span>{{address.AddressInfo}}</span>
+<!-- <button (click)="onEditAddress(address)">Edit</button> -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" [attr.data-target]="'#modal' + address.AddressId">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="{{'modal' + address.AddressId}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Address Info: <input type="text" value=""/></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="onSaveChange(addressEdit)" data-dismiss="modal">Save changes</button>
+        <button type="button" class="btn btn-secondary" (click)="onCloseModal()" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<button (click)="onDeleteAddress(address)">Delete</button>
+<br />

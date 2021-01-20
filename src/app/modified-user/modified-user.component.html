@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="col-xs-12" style="background-color:lavender;">
+        <h2>Add new user</h2>
+        <br />
+        <label>First Name</label>
+        <input type="text" [(ngModel)]="firstName">
+        <label>Last Name</label>
+        <input type="text" [(ngModel)]="lastName">
+        <br />
+        <br />
+        <p>Address</p>
+        <app-modified-user-addressinfo *ngFor="let address of addressLists" [address]="address" [addressLists]="addressLists">
+        </app-modified-user-addressinfo>
+        <button (click)="onSave()">Save</button>
+        <button (click)="onBack()">Back</button>
+    </div>
+</div>
