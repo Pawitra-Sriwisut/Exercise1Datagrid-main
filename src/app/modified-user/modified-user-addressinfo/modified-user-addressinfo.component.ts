@@ -11,6 +11,7 @@ import { CustomerAddress } from 'src/app/customer-address.model';
 export class ModifiedUserAddressinfoComponent implements OnInit {
   @Input() address: CustomerAddress;
   @Input() addressLists: any[];
+  @Input() indexAddress: any[];
   addressEdit: string;
   index: number;
 
@@ -22,6 +23,7 @@ export class ModifiedUserAddressinfoComponent implements OnInit {
 
   onDeleteAddress(address){
     this.index = this.addressLists.indexOf(address);
+    this.indexAddress.push(address.AddressId);
     if (this.index > -1) {
       this.addressLists.splice(this.index, 1);
     }

@@ -14,23 +14,21 @@ export class DisplayUserComponent implements OnInit {
   dataSource: DataSource;
 
   constructor(private http: HttpClient, service: AppService, private router: Router, private activatedRoute: ActivatedRoute) {
-    
+
   }
 
   ngOnInit(): void {
     this.onFetchData();
   }
 
-  onFetchData(){
-    this.http.get('https://localhost:44349/api/values').subscribe((data)=> {
-      console.log(data);
+  onFetchData() {
+    this.http.get('https://localhost:44349/api/values').subscribe((data) => {
     })
 
     this.dataSource = new DataSource({
       load: (loadOptions) => {
         return new Promise((resolve) => {
           return this.http.get('https://localhost:44349/api/values').subscribe((response: any) => {
-            console.log(response.data[0].CustomerAddress[0].AddressId);
             resolve(response);
           })
         })
@@ -38,13 +36,17 @@ export class DisplayUserComponent implements OnInit {
     })
   }
 
-  onEdit(data){
-    if(data === 0){
-      this.router.navigate(['../', 'modified-user', 'new'], {relativeTo: this.activatedRoute});
+  onEdit(data) {
+    if (data === 0) {
+      this.router.navigate(['../', 'modified-user', 'new'], { relativeTo: this.activatedRoute });
     }
-    else{
-      this.router.navigate(['../', 'modified-user', data.CustomerId, 'edit'], {relativeTo: this.activatedRoute});
+    else {
+      this.router.navigate(['../', 'modified-user', data.CustomerId, 'edit'], { relativeTo: this.activatedRoute });
     }
+  }
+
+  isNotEmpty(value: any): boolean {
+    return value !== undefined && value !== null && value !== "";
   }
 
 }
