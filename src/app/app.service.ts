@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import 'devextreme/data/odata/store';
 import DataSource from "devextreme/data/data_source";
 
 @Injectable()
@@ -28,6 +27,4 @@ export class AppService {
             }
         })
     }
-
-
 }

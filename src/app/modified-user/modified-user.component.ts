@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Customer } from '../customer.model';
 import { CustomerAddress } from '../customer-address.model';
-
+import { catchError } from 'rxjs/operators';
+ 
 @Component({
   selector: 'app-modified-user',
   templateUrl: './modified-user.component.html',
@@ -15,8 +16,7 @@ export class ModifiedUserComponent implements OnInit {
   firstName = '';
   lastName = '';
   addressLists: CustomerAddress[];
-  indexAddress = [];
-  indexDeleteAddress: number;
+  removeAddrId = [];
   newAddrInfo = '';
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router) { }
@@ -33,6 +33,8 @@ export class ModifiedUserComponent implements OnInit {
     if (this.editMode) {
       this.onGetData();
     }
+
+    this.addressLists = [];
   }
 
   onGetData() {
@@ -44,19 +46,42 @@ export class ModifiedUserComponent implements OnInit {
   }
 
   onSave() {
-    var postConfirm = confirm("Do you want to save?");
-    if (postConfirm) {
-      this.http.post('https://localhost:44349/api/values/postSave', {
-        Data: {
-          CustomerId: this.id,
+    if(this.id > 0){
+      var postConfirm = confirm("Do you want to save?");
+      if (postConfirm) {
+        this.http.post('https://localhost:44349/api/values/postSave', {
+          Data: {
+            CustomerId: this.id,
+            FirstName: this.firstName,
+            LastName: this.lastName,
+            CustomerAddress: this.addressLists
+          },
+          ListOfId: this.removeAddrId
+        }).pipe(catchError((e)=>{
+          alert(e.error.ExceptionMessage)
+          return e;
+        }))
+        .subscribe((e)=>{
+          //completed
+          this.router.navigate(['../', 'display-user'], { relativeTo: this.activatedRoute });
+        });
+      }
+    }
+    else{
+      var postConfirm = confirm("Do you want to save?");
+      if (postConfirm){
+        this.http.post('https://localhost:44349/api/values/addNewUser', {
           FirstName: this.firstName,
           LastName: this.lastName,
           CustomerAddress: this.addressLists
-        },
-        ListOfId: this.indexAddress
-      })
-        .subscribe();
-      this.router.navigate(['../', 'display-user'], { relativeTo: this.activatedRoute });
+        }).pipe(catchError((e => {
+          alert(e.message)
+          return e;
+        })))
+        .subscribe((e) => {
+          this.router.navigate(['../', 'display-user'], { relativeTo: this.activatedRoute });
+        });
+      }
     }
   }
 
@@ -65,17 +90,21 @@ export class ModifiedUserComponent implements OnInit {
   }
 
   onNewAddressInfo() {
-    var addAddrConfirm = confirm("Do you want to save?");
-    if (addAddrConfirm) {
-      this.http.post('https://localhost:44349/api/values/addAddr', {
-        id: this.id,
-        newAddr: this.newAddrInfo
-      })
-        .subscribe((data: CustomerAddress) => {
-          this.addressLists.push(data);
-        });
-        this.newAddrInfo='';
+    if(this.id > 0){
+      this.addressLists.push({ 
+        AddressId: 0,
+        AddressInfo: this.newAddrInfo,
+        CustomerId: this.id
+      });
+      this.newAddrInfo='';
+    }
+    else{
+      this.addressLists.push({ 
+        AddressId: 0,
+        AddressInfo: this.newAddrInfo,
+        CustomerId: 0
+      });
+      this.newAddrInfo='';
     }
   }
-
 }

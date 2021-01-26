@@ -7,11 +7,11 @@
       <span>{{address.AddressInfo}}</span>
     </div>
     <div class="col-xs-3">
-      <button type="button" data-toggle="modal" [attr.data-target]="'#modal' + address.AddressId">
+      <!-- <button type="button" data-toggle="modal" [attr.data-target]="'#modal' + address.AddressId">
         Edit
-      </button>
+      </button> -->
       <!-- Modal -->
-      <div class="modal fade" id="{{'modal' + address.AddressId}}" tabindex="-1" role="dialog"
+      <!-- <div class="modal fade" id="{{'modal' + address.AddressId}}" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -22,18 +22,18 @@
               </button>
             </div>
             <div class="modal-body">
-              <p>Address Info: <input type="text" [(ngModel)]="addressEdit" /></p>
+              <p>Address Info: <input type="text" value="{{address.AddressInfo}}" #addrEdit/></p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click)="onSaveChange(addressEdit)"
+              <button type="button" class="btn btn-primary" (click)="onSaveChange(addrEdit)"
                 data-dismiss="modal">Save
                 changes</button>
-              <button type="button" class="btn btn-secondary" (click)="onCloseModal()"
+              <button type="button" class="btn btn-secondary"
                 data-dismiss="modal">Close</button>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="col-xs-3">
       <button (click)="onDeleteAddress(address)">Delete</button>

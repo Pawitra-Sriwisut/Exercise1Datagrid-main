@@ -10,13 +10,15 @@ import { DisplayUserComponent } from './display-user/display-user.component';
 import { ModifiedUserComponent } from './modified-user/modified-user.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ModifiedUserAddressinfoComponent } from './modified-user/modified-user-addressinfo/modified-user-addressinfo.component';
+import { ModifiedUserModalComponent } from './modified-user/modified-user-modal/modified-user-modal.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DisplayUserComponent,
     ModifiedUserComponent,
-    ModifiedUserAddressinfoComponent
+    ModifiedUserAddressinfoComponent,
+    ModifiedUserModalComponent,
   ],
   imports: [
     FormsModule,

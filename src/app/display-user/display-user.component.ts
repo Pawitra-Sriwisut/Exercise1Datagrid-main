@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import DataSource from 'devextreme/data/data_source';
 
 import { AppService } from '../app.service';
+import { toPromise } from '../share/helper/handler';
+import { UserSearchParam } from './Model/user.model';
 
 @Component({
   selector: 'app-display-user',
@@ -12,9 +14,11 @@ import { AppService } from '../app.service';
 })
 export class DisplayUserComponent implements OnInit {
   dataSource: DataSource;
+  users: UserSearchParam;
+  ds;
 
   constructor(private http: HttpClient, service: AppService, private router: Router, private activatedRoute: ActivatedRoute) {
-
+    this.users = new UserSearchParam();
   }
 
   ngOnInit(): void {
@@ -26,14 +30,24 @@ export class DisplayUserComponent implements OnInit {
     })
 
     this.dataSource = new DataSource({
-      load: (loadOptions) => {
-        return new Promise((resolve) => {
-          return this.http.get('https://localhost:44349/api/values').subscribe((response: any) => {
-            resolve(response);
-          })
-        })
-      }
+      load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QueryUser', loadOptions))
     })
+
+    // this.ds = this.dataSource = new DataSource({
+    //   load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QueryUser', loadOptions))
+    // })
+
+    // console.log(this.ds);
+
+    // this.dataSource = new DataSource({
+    //   load: (loadOptions) => {
+    //     return new Promise((resolve) => {
+    //       return this.http.get('https://localhost:44349/api/values').subscribe((response: any) => {
+    //         resolve(response);
+    //       })
+    //     })
+    //   }
+    // })
   }
 
   onEdit(data) {

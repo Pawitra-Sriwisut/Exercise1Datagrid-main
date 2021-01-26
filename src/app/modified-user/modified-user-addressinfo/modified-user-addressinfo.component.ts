@@ -11,30 +11,34 @@ import { CustomerAddress } from 'src/app/customer-address.model';
 export class ModifiedUserAddressinfoComponent implements OnInit {
   @Input() address: CustomerAddress;
   @Input() addressLists: any[];
-  @Input() indexAddress: any[];
-  addressEdit: string;
-  index: number;
+  @Input() removeAddrId: any[];
+  //addressEdit: string;
+  indexOf: number;
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.addressEdit = this.address.AddressInfo;
   }
 
   onDeleteAddress(address){
-    this.index = this.addressLists.indexOf(address);
-    this.indexAddress.push(address.AddressId);
-    if (this.index > -1) {
-      this.addressLists.splice(this.index, 1);
+    console.log(this.addressLists);
+    if(address.AddressId > 0){
+      this.indexOf = this.addressLists.indexOf(address);
+      this.removeAddrId.push(address.AddressId);
+      if (this.indexOf > -1) {
+        this.addressLists.splice(this.indexOf, 1);
+      }
+    }
+    else{
+      this.indexOf = this.addressLists.indexOf(address);
+      if (this.indexOf > -1) {
+        this.addressLists.splice(this.indexOf, 1);
+      }
     }
   }
 
-  onSaveChange(addressChange){
-    this.address.AddressInfo = addressChange;
-  }
-
-  onCloseModal(){
-    this.addressEdit = this.address.AddressInfo;
+  onSaveChange(addressChange: HTMLInputElement){
+    this.address.AddressInfo = addressChange.value;
   }
 
 }
