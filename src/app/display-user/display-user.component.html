@@ -1,33 +1,33 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <div class="col-xs-6">
-                <button class="buttonNewUser" (click)="onEdit(0)">New User</button>
-            </div>
-            <div class="col-xs-3">
-
-            </div>
-            <div class="col-xs-3">
-
+            <div class="text-margin-10">
+                <div class="col-xs-3">
+                    <button class="buttonNewUser" (click)="onEdit(0)">New User</button>
+                </div>
+                <div class="col-xs-3">
+                        <label>Search: <input type="text" [(ngModel)]="users.FirstName" (keyup)="onChange()"/></label>
+                </div>
+                <div class="col-xs-3">
+                        <label>Search: <input type="text" [(ngModel)]="users.LastName" (keyup)="onChange()"/></label>
+                </div>
             </div>
         </div>
         <div class="col-xs-12">
             <div class="text-margin-20">
                 <dx-data-grid id="gridContainer" [dataSource]="dataSource" [remoteOperations]="true" showBorders="true">
                     <dxo-paging [pageSize]="12"></dxo-paging>
-                    <dxo-pager
-                        [showPageSizeSelector]="true"
-                        [allowedPageSizes]="[8, 12, 20]"
-                    ></dxo-pager>
+                    <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[8, 12, 20]"></dxo-pager>
                     <dxi-column dataField="CustomerId" caption="ID">
                     </dxi-column>
                     <dxi-column dataField="FirstName" caption="ชื่อ">
                     </dxi-column>
                     <dxi-column dataField="LastName" caption="นามสกุล">
                     </dxi-column>
-                    <dxi-column dataField="Action" caption="Action" cellTemplate="ButtonTemplate">
+                    <dxi-column [allowSorting]="false" dataField="Action" caption="Action"
+                        cellTemplate="ButtonTemplate">
                     </dxi-column>
-    
+
                     <div *dxTemplate="let cell of 'ButtonTemplate'">
                         <button (click)="onEdit(cell.data)">Edit</button>
                     </div>

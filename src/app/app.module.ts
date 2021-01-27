@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { DxBulletModule, DxDataGridModule, DxTemplateModule } from 'devextreme-angular';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
@@ -27,7 +28,8 @@ import { ModifiedUserModalComponent } from './modified-user/modified-user-modal/
     DxTemplateModule,
     DxBulletModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ModalModule.forRoot()
   ],
   providers: [AppService],
   bootstrap: [AppComponent]

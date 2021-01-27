@@ -22,6 +22,8 @@ export class DisplayUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.users.FirstName = '';
+    this.users.LastName = '';
     this.onFetchData();
   }
 
@@ -29,25 +31,19 @@ export class DisplayUserComponent implements OnInit {
     this.http.get('https://localhost:44349/api/values').subscribe((data) => {
     })
 
-    this.dataSource = new DataSource({
-      load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QueryUser', loadOptions))
-    })
-
-    // this.ds = this.dataSource = new DataSource({
-    //   load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QueryUser', loadOptions))
-    // })
-
-    // console.log(this.ds);
-
     // this.dataSource = new DataSource({
-    //   load: (loadOptions) => {
-    //     return new Promise((resolve) => {
-    //       return this.http.get('https://localhost:44349/api/values').subscribe((response: any) => {
-    //         resolve(response);
-    //       })
-    //     })
-    //   }
+    //   load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QueryUser', {...this.users, loadOptions}))
     // })
+
+    this.dataSource = new DataSource({
+      load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QuerySearchUser', {...this.users, loadOptions}))
+    });
+  }
+
+  onChange(){
+    this.dataSource = new DataSource({
+      load: loadOptions => toPromise(this.http.post('https://localhost:44349/api/values/QuerySearchUser', {...this.users, loadOptions}))
+    });
   }
 
   onEdit(data) {
