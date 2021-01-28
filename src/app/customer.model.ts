@@ -7,7 +7,7 @@ export interface Customer{
     LastName: string;
 }
 
-export class NewIdAddress {
+export class NewCustomerAddress {
     customerAddr: CustomerAddress;
     newIdAddr: number;
 }

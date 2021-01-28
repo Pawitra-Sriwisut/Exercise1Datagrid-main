@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Customer, NewIdAddress } from '../customer.model';
+import { Customer, NewCustomerAddress } from '../customer.model';
 import { CustomerAddress } from '../customer-address.model';
 import { catchError } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
@@ -17,28 +17,23 @@ export class ModifiedUserComponent implements OnInit {
   id: number;
   firstName = '';
   lastName = '';
-  addressLists: CustomerAddress[];
-  AddrInfo: NewIdAddress;
-  removeAddrId = [];
   newAddrInfo = '';
+  addressLists: CustomerAddress[];
   dataSourceAddr: DataSource;
-  indexOf: number;
+  indexOfAddr: number;
+  removeAddrId = [];
 
-  newIdAddrInfos: NewIdAddress[];
+  newAddrList: NewCustomerAddress[];
+  newAddr: NewCustomerAddress;
   countNewId: number;
-  newIdAddrInfo: NewIdAddress;
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, private modalService: BsModalService) { }
 
   ngOnInit(): void {
 
     this.addressLists = [];
-    this.newIdAddrInfos = [];
-
-    this.newIdAddrInfo = new NewIdAddress();
-
-    this.AddrInfo = new NewIdAddress();
-
+    this.newAddrList = [];
+    this.newAddr = new NewCustomerAddress();
     this.countNewId = 0;
 
     this.activatedRoute.firstChild.params
@@ -48,12 +43,9 @@ export class ModifiedUserComponent implements OnInit {
           this.editMode = params['id'] != null;
         }
       );
-
     if (this.editMode) {
       this.onGetData();
-      
     }
-
 
   }
 
@@ -66,15 +58,14 @@ export class ModifiedUserComponent implements OnInit {
         this.lastName = data.LastName;
         this.addressLists = data.CustomerAddress;
         this.addressLists.forEach(item => {
-          this.newIdAddrInfos.push({
+          this.newAddrList.push({
             customerAddr: item,
             newIdAddr: -1
           })
         })
-        console.log(this.newIdAddrInfos)
         this.dataSourceAddr = new DataSource({
           //store: this.addressLists
-          store: this.newIdAddrInfos
+          store: this.newAddrList
         })
       });
   }
@@ -130,7 +121,7 @@ export class ModifiedUserComponent implements OnInit {
         AddressInfo: this.newAddrInfo,
         CustomerId: this.id
       });
-      this.newIdAddrInfos.push({
+      this.newAddrList.push({
         customerAddr: this.addressLists[this.addressLists.length - 1],
         newIdAddr: this.countNewId
       })
@@ -143,7 +134,7 @@ export class ModifiedUserComponent implements OnInit {
         AddressInfo: this.newAddrInfo,
         CustomerId: 0
       });
-      this.newIdAddrInfos.push({
+      this.newAddrList.push({
         customerAddr: this.addressLists[this.addressLists.length - 1],
         newIdAddr: this.countNewId
       })
@@ -152,7 +143,7 @@ export class ModifiedUserComponent implements OnInit {
     }
     this.dataSourceAddr = new DataSource({
       //store: this.addressLists
-      store: this.newIdAddrInfos
+      store: this.newAddrList
     });
   }
 
@@ -176,59 +167,53 @@ export class ModifiedUserComponent implements OnInit {
   //   });
   // }
 
-  onDeleteAddr(address: NewIdAddress) {
+  onDeleteAddr(address: NewCustomerAddress) {
     if(address.customerAddr.AddressId > 0){
-      this.indexOf = this.newIdAddrInfos.indexOf(address);
+      this.indexOfAddr = this.newAddrList.indexOf(address);
       this.removeAddrId.push(address.customerAddr.AddressId);
-      if (this.indexOf > -1) {
-        this.newIdAddrInfos.splice(this.indexOf, 1);
-        this.addressLists.splice(this.indexOf, 1);
+      if (this.indexOfAddr > -1) {
+        this.newAddrList.splice(this.indexOfAddr, 1);
+        this.addressLists.splice(this.indexOfAddr, 1);
       }
     }
     else{
-      this.indexOf = this.newIdAddrInfos.indexOf(address);
-      if (this.indexOf > -1) {
-        this.newIdAddrInfos.splice(this.indexOf, 1);
-        this.addressLists.splice(this.indexOf, 1);
+      this.indexOfAddr = this.newAddrList.indexOf(address);
+      if (this.indexOfAddr > -1) {
+        this.newAddrList.splice(this.indexOfAddr, 1);
+        this.addressLists.splice(this.indexOfAddr, 1);
       }
     }
     this.dataSourceAddr = new DataSource({
       //store: this.addressLists
-      store: this.newIdAddrInfos
+      store: this.newAddrList
     });
 
-    //console.log(this.addressLists);
   }
 
-  openModal(template: TemplateRef<any>, data: any) {
-    //console.log(this.countNewId);
-    this.AddrInfo = {...data}; // fix two-way
-    
-    this.newIdAddrInfo.customerAddr = {...this.AddrInfo.customerAddr}
-    this.newIdAddrInfo.newIdAddr = this.AddrInfo.newIdAddr;
-    console.log(this.AddrInfo);
-    console.log(this.newIdAddrInfo);
+  openModal(template: TemplateRef<any>, data: NewCustomerAddress) {
+    // this.newAddr.customerAddr = {...this.AddrInfo.customerAddr}
+    // this.newAddr.newIdAddr = this.AddrInfo.newIdAddr;
 
+    this.newAddr.customerAddr = {...data.customerAddr}
+    this.newAddr.newIdAddr = data.newIdAddr;
 
     this.modalRef = this.modalService.show(template);
   }
 
   onSaveNewAddrInfo() {
-    this.newIdAddrInfos.forEach(item => {
+    this.newAddrList.forEach(item => {
       if(item.customerAddr.AddressId > 0){
-        if (item.customerAddr.AddressId == this.newIdAddrInfo.customerAddr.AddressId) {
-          item.customerAddr.AddressInfo =  this.newIdAddrInfo.customerAddr.AddressInfo;
+        if (item.customerAddr.AddressId == this.newAddr.customerAddr.AddressId) {
+          item.customerAddr.AddressInfo =  this.newAddr.customerAddr.AddressInfo;
         }
       }
       else{
-        if(item.newIdAddr == this.newIdAddrInfo.newIdAddr){
-          item.customerAddr.AddressInfo = this.newIdAddrInfo.customerAddr.AddressInfo;
+        if(item.newIdAddr == this.newAddr.newIdAddr){
+          item.customerAddr.AddressInfo = this.newAddr.customerAddr.AddressInfo;
         }
       }
     });
 
-    //console.log(this.addressLists);
-    console.log(this.newIdAddrInfos);
     this.modalRef.hide();
   }
 }
