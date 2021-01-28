@@ -27,7 +27,6 @@
                     <dxi-column [allowSorting]="false" dataField="Action" caption="Action"
                         cellTemplate="ButtonTemplate">
                     </dxi-column>
-
                     <div *dxTemplate="let cell of 'ButtonTemplate'">
                         <button (click)="onEdit(cell.data)">Edit</button>
                     </div>

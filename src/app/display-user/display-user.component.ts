@@ -59,4 +59,8 @@ export class DisplayUserComponent implements OnInit {
     return value !== undefined && value !== null && value !== "";
   }
 
+  onTest(d){
+    console.log(d);
+  }
+
 }

@@ -45,7 +45,7 @@
             <dx-data-grid id="gridContainerAddr" [dataSource]="dataSourceAddr" [remoteOperations]="false"
                 showBorders="true">
                 <dxo-paging [pageSize]="2"></dxo-paging>
-                <dxi-column dataField="AddressInfo" caption="ที่อยู่">
+                <dxi-column dataField="customerAddr.AddressInfo" caption="ที่อยู่">
                 </dxi-column>
                 <dxi-column [allowSorting]="false" dataField="Edit" caption="Edit" cellTemplate="EditButtonTemplate">
                 </dxi-column>
@@ -106,7 +106,7 @@
             </button>
         </div>
         <div class="modal-body">
-            <p>Address Info: <input type="text" [(ngModel)]="AddrInfo.AddressInfo"/></p>
+            <p>Address Info: <input type="text" [(ngModel)]="newIdAddrInfo.customerAddr.AddressInfo"/></p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary" (click)="onSaveNewAddrInfo()">Save changes</button>

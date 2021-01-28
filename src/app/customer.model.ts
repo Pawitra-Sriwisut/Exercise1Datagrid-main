@@ -6,3 +6,8 @@ export interface Customer{
     FirstName: string;
     LastName: string;
 }
+
+export class NewIdAddress {
+    customerAddr: CustomerAddress;
+    newIdAddr: number;
+}

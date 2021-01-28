@@ -3,9 +3,3 @@ export class UserSearchParam {
     FirstName: string;
     LastName: string;
   }
-
-  export interface CustomerAddress{
-    AddressId: number;
-    CustomerId: number;
-    AddressInfo: string;
-}

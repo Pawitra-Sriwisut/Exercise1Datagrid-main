@@ -2,7 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Customer } from '../customer.model';
+import { Customer, NewIdAddress } from '../customer.model';
 import { CustomerAddress } from '../customer-address.model';
 import { catchError } from 'rxjs/operators';
 import DataSource from 'devextreme/data/data_source';
@@ -18,17 +18,28 @@ export class ModifiedUserComponent implements OnInit {
   firstName = '';
   lastName = '';
   addressLists: CustomerAddress[];
-  AddrInfo: CustomerAddress;
+  AddrInfo: NewIdAddress;
   removeAddrId = [];
   newAddrInfo = '';
   dataSourceAddr: DataSource;
   indexOf: number;
+
+  newIdAddrInfos: NewIdAddress[];
+  countNewId: number;
+  newIdAddrInfo: NewIdAddress;
 
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute, private router: Router, private modalService: BsModalService) { }
 
   ngOnInit(): void {
 
     this.addressLists = [];
+    this.newIdAddrInfos = [];
+
+    this.newIdAddrInfo = new NewIdAddress();
+
+    this.AddrInfo = new NewIdAddress();
+
+    this.countNewId = 0;
 
     this.activatedRoute.firstChild.params
       .subscribe(
@@ -40,22 +51,30 @@ export class ModifiedUserComponent implements OnInit {
 
     if (this.editMode) {
       this.onGetData();
+      
     }
+
+
   }
 
   onGetData() {
     this.http.post('https://localhost:44349/api/values/QueryAddress', {
         CustomerId: this.id
-        // FirstName: this.firstName,
-        // LastName: this.lastName,
-        // CustomerAddress: this.addressLists
     })
       .subscribe((data: Customer) => {
         this.firstName = data.FirstName;
         this.lastName = data.LastName;
         this.addressLists = data.CustomerAddress;
+        this.addressLists.forEach(item => {
+          this.newIdAddrInfos.push({
+            customerAddr: item,
+            newIdAddr: -1
+          })
+        })
+        console.log(this.newIdAddrInfos)
         this.dataSourceAddr = new DataSource({
-          store: this.addressLists
+          //store: this.addressLists
+          store: this.newIdAddrInfos
         })
       });
   }
@@ -111,6 +130,11 @@ export class ModifiedUserComponent implements OnInit {
         AddressInfo: this.newAddrInfo,
         CustomerId: this.id
       });
+      this.newIdAddrInfos.push({
+        customerAddr: this.addressLists[this.addressLists.length - 1],
+        newIdAddr: this.countNewId
+      })
+      this.countNewId++;
       this.newAddrInfo = '';
     }
     else {
@@ -119,43 +143,92 @@ export class ModifiedUserComponent implements OnInit {
         AddressInfo: this.newAddrInfo,
         CustomerId: 0
       });
+      this.newIdAddrInfos.push({
+        customerAddr: this.addressLists[this.addressLists.length - 1],
+        newIdAddr: this.countNewId
+      })
+      this.countNewId++;
       this.newAddrInfo = '';
     }
     this.dataSourceAddr = new DataSource({
-      store: this.addressLists
+      //store: this.addressLists
+      store: this.newIdAddrInfos
     });
   }
 
-  onDeleteAddr(address: CustomerAddress) {
-    if(address.AddressId > 0){
-      this.indexOf = this.addressLists.indexOf(address);
-      this.removeAddrId.push(address.AddressId);
+  // onDeleteAddr(address: CustomerAddress) {
+  //   if(address.AddressId > 0){
+  //     this.indexOf = this.addressLists.indexOf(address);
+  //     this.removeAddrId.push(address.AddressId);
+  //     if (this.indexOf > -1) {
+  //       this.addressLists.splice(this.indexOf, 1);
+  //     }
+  //   }
+  //   else{
+  //     this.indexOf = this.addressLists.indexOf(address);
+  //     if (this.indexOf > -1) {
+  //       this.addressLists.splice(this.indexOf, 1);
+  //     }
+  //   }
+  //   this.dataSourceAddr = new DataSource({
+  //     //store: this.addressLists
+  //     store: this.newIdAddrInfos
+  //   });
+  // }
+
+  onDeleteAddr(address: NewIdAddress) {
+    if(address.customerAddr.AddressId > 0){
+      this.indexOf = this.newIdAddrInfos.indexOf(address);
+      this.removeAddrId.push(address.customerAddr.AddressId);
       if (this.indexOf > -1) {
+        this.newIdAddrInfos.splice(this.indexOf, 1);
         this.addressLists.splice(this.indexOf, 1);
       }
     }
     else{
-      this.indexOf = this.addressLists.indexOf(address);
+      this.indexOf = this.newIdAddrInfos.indexOf(address);
       if (this.indexOf > -1) {
+        this.newIdAddrInfos.splice(this.indexOf, 1);
         this.addressLists.splice(this.indexOf, 1);
       }
     }
     this.dataSourceAddr = new DataSource({
-      store: this.addressLists
+      //store: this.addressLists
+      store: this.newIdAddrInfos
     });
+
+    //console.log(this.addressLists);
   }
 
   openModal(template: TemplateRef<any>, data: any) {
-    this.AddrInfo = { ...data }; // fix two-way
+    //console.log(this.countNewId);
+    this.AddrInfo = {...data}; // fix two-way
+    
+    this.newIdAddrInfo.customerAddr = {...this.AddrInfo.customerAddr}
+    this.newIdAddrInfo.newIdAddr = this.AddrInfo.newIdAddr;
+    console.log(this.AddrInfo);
+    console.log(this.newIdAddrInfo);
+
+
     this.modalRef = this.modalService.show(template);
   }
 
   onSaveNewAddrInfo() {
-    this.addressLists.forEach(item => {
-      if (item.AddressId == this.AddrInfo.AddressId) {
-        item.AddressInfo =  this.AddrInfo.AddressInfo;
+    this.newIdAddrInfos.forEach(item => {
+      if(item.customerAddr.AddressId > 0){
+        if (item.customerAddr.AddressId == this.newIdAddrInfo.customerAddr.AddressId) {
+          item.customerAddr.AddressInfo =  this.newIdAddrInfo.customerAddr.AddressInfo;
+        }
+      }
+      else{
+        if(item.newIdAddr == this.newIdAddrInfo.newIdAddr){
+          item.customerAddr.AddressInfo = this.newIdAddrInfo.customerAddr.AddressInfo;
+        }
       }
     });
+
+    //console.log(this.addressLists);
+    console.log(this.newIdAddrInfos);
     this.modalRef.hide();
   }
 }
